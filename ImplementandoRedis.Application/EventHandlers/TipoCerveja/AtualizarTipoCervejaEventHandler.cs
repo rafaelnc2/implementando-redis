@@ -1,12 +1,10 @@
-﻿using ImplementandoRedis.Application.Events.TiposCerveja;
-using ImplementandoRedis.Core.Constants;
+﻿using ImplementandoRedis.Core.Constants;
+using ImplementandoRedis.Core.Events.TiposCerveja;
 using ImplementandoRedis.Core.Interfaces;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
-namespace ImplementandoRedis.Application.Handlers.TiposCerveja;
+namespace ImplementandoRedis.Application.EventHandlers.TipoCerveja;
 
-public sealed class AtualizarTipoCervejaEventHandler : INotificationHandler<AtualizarTipoCervejaEvent>
+public sealed class AtualizarTipoCervejaEventHandler : INotificationHandler<TipoCervejaAtualizadoEvent>
 {
     private readonly ILogger<AtualizarTipoCervejaEventHandler> _logger;
     private readonly ISendMessageService _sender;
@@ -17,7 +15,7 @@ public sealed class AtualizarTipoCervejaEventHandler : INotificationHandler<Atua
         _sender = sender;
     }
 
-    public async Task Handle(AtualizarTipoCervejaEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(TipoCervejaAtualizadoEvent notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Enviando tipo cerveja ID {@Id} para a fila de atualização", notification.tipoCerveja.Id);
 

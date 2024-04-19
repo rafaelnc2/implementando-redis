@@ -1,5 +1,4 @@
-﻿using Redis.OM.Modeling;
-using System.Text.Json.Serialization;
+﻿using ImplementandoRedis.Core.Events.TiposCerveja;
 
 namespace ImplementandoRedis.Core.Entities;
 
@@ -12,6 +11,17 @@ public sealed class TipoCerveja : Entity
     }
 
     [JsonConstructor]
+    private TipoCerveja(int id, string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
+    {
+        Id = id;
+        Nome = nome.Trim();
+        Origem = origem.Trim();
+        Coloracao = coloracao.Trim();
+        TeorAlcoolico = teorAlcoolico.Trim();
+        Fermentacao = fermentacao.Trim();
+        Descricao = descricao;
+    }
+
     public TipoCerveja(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
     {
         Validate(nome, origem, coloracao, teorAlcoolico, fermentacao, descricao);
@@ -28,6 +38,8 @@ public sealed class TipoCerveja : Entity
         Descricao = descricao;
 
         DataCriacao = DateTime.Now;
+
+        Raise(new TipoCervejaCriadoEvent(Guid.NewGuid(), this));
     }
 
     [JsonInclude]
@@ -100,5 +112,7 @@ public sealed class TipoCerveja : Entity
         Descricao = descricao;
 
         DataAtualizacao = DateTime.Now;
+
+        Raise(new TipoCervejaAtualizadoEvent(Guid.NewGuid(), this));
     }
 }

@@ -1,8 +1,5 @@
 ﻿using ImplementandoRedis.Application.Commands.Cervejas;
-using ImplementandoRedis.Core.Repositories;
-using ImplementandoRedis.Shared.Constants;
 using ImplementandoRedis.Shared.Responses.Cervejas;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ImplementandoRedis.Application.Handlers.Cervejas;
 

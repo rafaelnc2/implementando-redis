@@ -2,6 +2,7 @@
 using ImplementandoRedis.Core.Entities;
 using ImplementandoRedis.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ImplementandoRedis.Infra.Repositories.EFCore;
 
@@ -53,5 +54,10 @@ public class CervejaEfRepository : ICervejaRepository
             .FirstOrDefaultAsync(c => c.Id == cervejaId);
 
         return cerveja;
+    }
+
+    public Task<IEnumerable<Cerveja>> ObterPorFiltrosAsync(Expression<Func<Cerveja, bool>> filter)
+    {
+        throw new NotImplementedException();
     }
 }

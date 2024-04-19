@@ -1,5 +1,6 @@
 ﻿using ImplementandoRedis.Core.Entities;
 using ImplementandoRedis.Core.Repositories;
+using MediatR;
 using Redis.OM;
 using Redis.OM.Searching;
 using StackExchange.Redis;
@@ -11,17 +12,21 @@ public class CervejaRedisRepository : ICervejaRepository
 {
     private readonly RedisConnectionProvider _provider;
     private readonly RedisCollection<Cerveja> _cerveja;
+    private readonly IPublisher _eventPublisher;
 
-    public CervejaRedisRepository(IConnectionMultiplexer redisMultiplexerConnect)
+    public CervejaRedisRepository(IConnectionMultiplexer redisMultiplexerConnect, IPublisher eventPublisher)
     {
         _provider = new RedisConnectionProvider(redisMultiplexerConnect);
         _cerveja = (RedisCollection<Cerveja>)_provider.RedisCollection<Cerveja>();
+        _eventPublisher = eventPublisher;
     }
 
 
     public async Task<Cerveja> CriarAsync(Cerveja cerveja)
     {
         await _cerveja.InsertAsync(cerveja);
+
+        await RaiseEventsAsync(cerveja);
 
         return cerveja;
     }
@@ -54,4 +59,13 @@ public class CervejaRedisRepository : ICervejaRepository
             .Where(filter)
             .OrderBy(tipo => tipo.Nome)
             .ToListAsync();
+
+
+    private async Task RaiseEventsAsync(Cerveja cerveja)
+    {
+        foreach (var domainEvent in cerveja.DomainEvents)
+        {
+            await _eventPublisher.Publish(domainEvent, CancellationToken.None);
+        }
+    }
 }

@@ -1,8 +1,5 @@
 ﻿using ImplementandoRedis.Application.Queries.TiposCerveja;
-using ImplementandoRedis.Core.Repositories;
-using ImplementandoRedis.Shared.Constants;
 using ImplementandoRedis.Shared.Responses.TiposCerveja;
-using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 
 namespace ImplementandoRedis.Application.Handlers.TiposCerveja;

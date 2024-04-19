@@ -1,9 +1,5 @@
 ﻿using ImplementandoRedis.Application.Commands.Cervejas;
-using ImplementandoRedis.Application.Events.Cervejas;
-using ImplementandoRedis.Core.Repositories;
-using ImplementandoRedis.Shared.Constants;
 using ImplementandoRedis.Shared.Responses.Cervejas;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ImplementandoRedis.Application.Handlers.Cervejas;
 
@@ -11,15 +7,12 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
 {
     private readonly ICervejaRepository _cervejaRepo;
     private readonly ITipoCervejaRepository _tipoCervejaRepo;
-    private readonly IPublisher _eventPublisher;
 
     public CriarCervejaHandler([FromKeyedServices(KeyedServicesName.CERVEJA_REDIS_REPO)] ICervejaRepository repository,
-        [FromKeyedServices(KeyedServicesName.TIPO_CERVEJA_EF_REPO)] ITipoCervejaRepository tipoCervejaRepo,
-        IPublisher eventPublisher)
+        [FromKeyedServices(KeyedServicesName.TIPO_CERVEJA_EF_REPO)] ITipoCervejaRepository tipoCervejaRepo)
     {
         _cervejaRepo = repository;
         _tipoCervejaRepo = tipoCervejaRepo;
-        _eventPublisher = eventPublisher;
     }
 
     public async Task<CustomResult<CriarCervejaResponse>> Handle(CriarCervejaCommand request, CancellationToken cancellationToken)
@@ -45,8 +38,6 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
             response.BadRequestResponse(cerveja.Errors);
 
         await _cervejaRepo.CriarAsync(cerveja);
-
-        await _eventPublisher.Publish(new CriarCervejaEvent(cerveja), cancellationToken);
 
         CriarCervejaResponse cervejaResponse = cerveja;
 

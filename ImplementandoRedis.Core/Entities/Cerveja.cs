@@ -1,4 +1,5 @@
-﻿using Redis.OM.Modeling;
+﻿using ImplementandoRedis.Application.Events.Cervejas;
+using Redis.OM.Modeling;
 using System.Text.Json.Serialization;
 
 namespace ImplementandoRedis.Core.Entities;
@@ -31,6 +32,8 @@ public sealed class Cerveja : Entity
         Tipo = tipo;
 
         DataCriacao = DateTime.Now;
+
+        Raise(new CervejaCriadaEvent(Guid.NewGuid(), this));
     }
 
 

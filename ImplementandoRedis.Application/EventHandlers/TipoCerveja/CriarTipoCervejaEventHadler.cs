@@ -1,11 +1,9 @@
-﻿using ImplementandoRedis.Application.Events.TiposCerveja;
-using ImplementandoRedis.Core.Constants;
+﻿using ImplementandoRedis.Core.Constants;
+using ImplementandoRedis.Core.Events.TiposCerveja;
 using ImplementandoRedis.Core.Interfaces;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
-namespace ImplementandoRedis.Application.Handlers.TiposCerveja;
-public sealed class CriarTipoCervejaEventHadler : INotificationHandler<CriarTipoCervejaEvent>
+namespace ImplementandoRedis.Application.EventHandlers.TipoCerveja;
+public sealed class CriarTipoCervejaEventHadler : INotificationHandler<TipoCervejaCriadoEvent>
 {
     private readonly ILogger<CriarTipoCervejaEventHadler> _logger;
     private readonly ISendMessageService _sender;
@@ -16,7 +14,7 @@ public sealed class CriarTipoCervejaEventHadler : INotificationHandler<CriarTipo
         _sender = sender;
     }
 
-    public async Task Handle(CriarTipoCervejaEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(TipoCervejaCriadoEvent notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Enviando tipo cerveja ID {@Id} para a fila de gravação", notification.tipoCerveja.Id);
 

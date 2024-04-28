@@ -8,7 +8,7 @@ public class CriarCervejaResponse
     public string Nome { get; set; } = string.Empty;
     public string Fabricante { get; set; } = string.Empty;
     public bool Artesanal { get; set; } = false;
-    public TipoCerveja Tipo { get; set; } = null!;
+    public TipoCerveja TipoCerveja { get; set; } = null!;
     public string Descricao { get; set; } = string.Empty;
     public int AnoLancamento { get; set; }
 
@@ -20,7 +20,7 @@ public class CriarCervejaResponse
             Nome = cerveja.Nome,
             Fabricante = cerveja.Fabricante,
             Artesanal = cerveja.Artesanal,
-            Tipo = cerveja.Tipo,
+            TipoCerveja = cerveja.TipoCerveja,
             Descricao = cerveja.Descricao,
             AnoLancamento = cerveja.AnoLancamento
         };

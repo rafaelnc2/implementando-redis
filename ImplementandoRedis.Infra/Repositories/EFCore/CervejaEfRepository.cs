@@ -25,7 +25,7 @@ public class CervejaEfRepository : ICervejaRepository
         await _ctx.Set<Cerveja>().AddAsync(cerveja);
 
         //Ignora a propriedade Tipo na hora de incluir / evita o ef querer incluir um novo tipo
-        _ctx.Entry(cerveja.Tipo).State = EntityState.Unchanged;
+        _ctx.Entry(cerveja.TipoCerveja).State = EntityState.Unchanged;
 
         await _ctx.SaveChangesAsync();
 
@@ -40,7 +40,7 @@ public class CervejaEfRepository : ICervejaRepository
     public async Task<Cerveja?> ObterPorIdAsync(Guid cervejaId)
     {
         var cerveja = await _ctx.Cerveja
-            .Include(t => t.Tipo)
+            .Include(t => t.TipoCerveja)
             .FirstOrDefaultAsync(c => c.Id == cervejaId);
 
         return cerveja;
@@ -50,7 +50,7 @@ public class CervejaEfRepository : ICervejaRepository
     {
         var cerveja = await _ctx.Cerveja
             .AsNoTracking()
-            .Include(t => t.Tipo)
+            .Include(t => t.TipoCerveja)
             .FirstOrDefaultAsync(c => c.Id == cervejaId);
 
         return cerveja;

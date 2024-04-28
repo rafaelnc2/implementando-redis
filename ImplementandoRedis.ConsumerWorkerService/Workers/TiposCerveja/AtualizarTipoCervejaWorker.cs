@@ -1,4 +1,6 @@
 ﻿
+using ImplementandoRedis.Core.Interfaces;
+
 namespace ImplementandoRedis.ConsumerWorkerService.Workers.TiposCerveja;
 
 public class AtualizarTipoCervejaWorker : BackgroundService
@@ -6,12 +8,16 @@ public class AtualizarTipoCervejaWorker : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly ISubscriber _subscriber;
     private readonly ILogger<CriarTipoCervejaWorker> _logger;
+    private readonly ISendMessageService _sender;
 
-    public AtualizarTipoCervejaWorker(IConnectionMultiplexer redisMultiplexerConnect, ILogger<CriarTipoCervejaWorker> logger, IServiceProvider serviceProvider)
+
+    public AtualizarTipoCervejaWorker(IConnectionMultiplexer redisMultiplexerConnect, ILogger<CriarTipoCervejaWorker> logger,
+        IServiceProvider serviceProvider, ISendMessageService sender)
     {
         _subscriber = redisMultiplexerConnect.GetSubscriber();
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _sender = sender;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -37,12 +43,14 @@ public class AtualizarTipoCervejaWorker : BackgroundService
 
                 if (tipoCerveja is null)
                 {
-                    _logger.LogWarning("Tipo cerveja não encontrada. Inserindo no Redis: {Channel} {Id}", channel, messageDeserialized.Id);
+                    _logger.LogWarning("Tipo cerveja não encontrada. Encaminhando para a fila de inclusão no Redis: {Channel} {Id}", channel, messageDeserialized.Id);
 
-                    await tipoCervejaRepo.CriarAsync(messageDeserialized);
+                    await _sender.SendMessage(ChannelNames.TIPO_CERVEJA_CRIAR_CHANNEL, message.ToString());
+
+                    return;
                 }
-                else
-                    await tipoCervejaRepo.AtualizarAsync(messageDeserialized);
+
+                await tipoCervejaRepo.AtualizarAsync(messageDeserialized);
 
                 _logger.LogInformation("Mensagem recebida: {Channel} {Id}", channel, messageDeserialized.Id);
             }

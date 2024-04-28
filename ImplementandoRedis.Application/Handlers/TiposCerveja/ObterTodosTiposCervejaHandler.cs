@@ -3,7 +3,7 @@ using ImplementandoRedis.Shared.Responses.TiposCerveja;
 
 namespace ImplementandoRedis.Application.Handlers.TiposCerveja;
 
-public class ObterTodosTiposCervejaHandler : IRequestHandler<ObterTodosTiposCervejaQuery, CustomResult<IEnumerable<TipoCervejaResponse>>>
+public class ObterTodosTiposCervejaHandler : IRequestHandler<ObterTodosTiposCervejaQuery, CustomResult<IEnumerable<ObterTodosTiposCervejaResponse>>>
 {
     private readonly ITipoCervejaRepository _tipoCervejaRepo;
 
@@ -12,16 +12,16 @@ public class ObterTodosTiposCervejaHandler : IRequestHandler<ObterTodosTiposCerv
         _tipoCervejaRepo = tipoCervejaRepo;
     }
 
-    public async Task<CustomResult<IEnumerable<TipoCervejaResponse>>> Handle(ObterTodosTiposCervejaQuery request, CancellationToken cancellationToken)
+    public async Task<CustomResult<IEnumerable<ObterTodosTiposCervejaResponse>>> Handle(ObterTodosTiposCervejaQuery request, CancellationToken cancellationToken)
     {
-        var response = new CustomResult<IEnumerable<TipoCervejaResponse>>();
+        var response = new CustomResult<IEnumerable<ObterTodosTiposCervejaResponse>>();
 
         var tiposCerveja = await _tipoCervejaRepo.ObterTodosAsync();
 
         if (tiposCerveja is null)
-            return response.OkResponse(Enumerable.Empty<TipoCervejaResponse>());
+            return response.OkResponse(Enumerable.Empty<ObterTodosTiposCervejaResponse>());
 
-        var tiposCervejaResponse = tiposCerveja.ToList().ConvertAll<TipoCervejaResponse>(tipo => tipo);
+        var tiposCervejaResponse = tiposCerveja.ToList().ConvertAll<ObterTodosTiposCervejaResponse>(tipo => tipo);
 
         return response.OkResponse(tiposCervejaResponse);
     }

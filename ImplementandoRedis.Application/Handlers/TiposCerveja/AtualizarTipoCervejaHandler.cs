@@ -20,7 +20,7 @@ public class AtualizarTipoCervejaHandler : IRequestHandler<AtualizarTipoCervejaC
         if (tipoCerveja is not TipoCerveja)
             return response.NotFoundResponse();
 
-        tipoCerveja.UpdateData(request.Nome, request.Origem, request.Coloracao, request.TeorAlcoolico, request.Fermentacao, request.Descricao);
+        tipoCerveja.Update(request.Nome, request.Origem, request.Coloracao, request.TeorAlcoolico, request.Fermentacao, request.Descricao);
 
         await _tipoCervejaRepo.AtualizarAsync(tipoCerveja);
 

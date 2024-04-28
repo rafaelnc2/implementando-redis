@@ -11,24 +11,8 @@ public sealed class TipoCerveja : Entity
     }
 
     [JsonConstructor]
-    private TipoCerveja(int id, string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
+    private TipoCerveja(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
     {
-        Id = id;
-        Nome = nome.Trim();
-        Origem = origem.Trim();
-        Coloracao = coloracao.Trim();
-        TeorAlcoolico = teorAlcoolico.Trim();
-        Fermentacao = fermentacao.Trim();
-        Descricao = descricao;
-    }
-
-    public TipoCerveja(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
-    {
-        Validate(nome, origem, coloracao, teorAlcoolico, fermentacao, descricao);
-
-        if (IsValid is false)
-            return;
-
         Id = Id;
         Nome = nome.Trim();
         Origem = origem.Trim();
@@ -38,8 +22,6 @@ public sealed class TipoCerveja : Entity
         Descricao = descricao;
 
         DataCriacao = DateTime.Now;
-
-        Raise(new TipoCervejaCriadoEvent(Guid.NewGuid(), this));
     }
 
     [JsonInclude]
@@ -70,7 +52,7 @@ public sealed class TipoCerveja : Entity
 
 
 
-    private void Validate(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
+    private static void Validate(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
     {
         if (string.IsNullOrWhiteSpace(nome))
             _errors.Add("Nome é obrigatório");
@@ -97,11 +79,33 @@ public sealed class TipoCerveja : Entity
             _errors.Add("Descrição deve ter no máximo 1000 caracteres");
     }
 
-    public void UpdateData(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
+
+    public static TipoCerveja? Create(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
     {
         Validate(nome, origem, coloracao, teorAlcoolico, fermentacao, descricao);
 
-        if (IsValid is false)
+        if (_errors.Any() is true)
+            return null;
+
+        var tipoCerveja = new TipoCerveja(
+            nome,
+            origem,
+            coloracao,
+            teorAlcoolico,
+            fermentacao,
+            descricao
+        );
+
+        Raise(new TipoCervejaAtualizadoEvent(Guid.NewGuid(), tipoCerveja));
+
+        return tipoCerveja;
+    }
+
+    public void Update(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
+    {
+        Validate(nome, origem, coloracao, teorAlcoolico, fermentacao, descricao);
+
+        if (_errors.Any() is true)
             return;
 
         Nome = nome;

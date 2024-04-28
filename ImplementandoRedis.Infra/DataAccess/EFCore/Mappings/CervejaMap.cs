@@ -32,7 +32,7 @@ public class CervejaMap : IEntityTypeConfiguration<Cerveja>
             .HasColumnType("bit")
             .HasDefaultValue(0);
 
-        builder.Property(x => x.TipoId)
+        builder.Property(x => x.TipoCervejaId)
             .IsRequired()
             .HasColumnName("TipoId")
             .HasColumnType("INT");
@@ -56,7 +56,7 @@ public class CervejaMap : IEntityTypeConfiguration<Cerveja>
             .HasColumnType("DATETIME");
 
 
-        builder.HasOne(x => x.Tipo)
+        builder.HasOne(x => x.TipoCerveja)
             .WithMany(x => x.Cerveja)
             .HasConstraintName("FK_Cerveja_TipoCerveja");
     }

@@ -16,7 +16,7 @@ public class CriarTipoCervejaHandler : IRequestHandler<CriarTipoCervejaCommand, 
     {
         var response = new CustomResult<TipoCervejaResponse>();
 
-        var tipoCerveja = new TipoCerveja(
+        var tipoCerveja = TipoCerveja.Create(
             request.Nome,
             request.Origem,
             request.Coloracao,

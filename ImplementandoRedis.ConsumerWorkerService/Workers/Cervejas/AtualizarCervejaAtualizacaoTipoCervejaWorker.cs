@@ -32,7 +32,7 @@ public class AtualizarCervejaAtualizacaoTipoCervejaWorker : BackgroundService
 
                 var cervejaRepo = scope.ServiceProvider.GetRequiredKeyedService<ICervejaRepository>(KeyedServicesName.CERVEJA_EF_REPO);
 
-                Expression<Func<Cerveja, bool>> filter = cerva => cerva.TipoId == messageDeserialized.Id;
+                Expression<Func<Cerveja, bool>> filter = cerva => cerva.TipoCervejaId == messageDeserialized.Id;
 
                 var cervejas = await cervejaRepo.ObterPorFiltrosAsync(filter);
 

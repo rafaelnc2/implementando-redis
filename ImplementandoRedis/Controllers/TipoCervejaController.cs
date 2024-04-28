@@ -30,11 +30,11 @@ public class TipoCervejaController : ApiBaseController<TipoCervejaController>
     }
 
     [HttpGet("filtro")]
-    public async Task<IActionResult> ObterPorNomeAsync([FromQuery] string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao)
+    public async Task<IActionResult> ObterPorNomeAsync([FromQuery] ObterTipoCervejaPorFiltrosQuery filtros)
     {
-        Logger.LogInformation("Obter Tipos de Cerveja por nome");
+        Logger.LogInformation("Obter Tipos de Cerveja por filtros");
 
-        var result = await Mediator.Send(new ObterTipoCervejaPorFiltrosQuery(nome, origem, coloracao, teorAlcoolico, fermentacao));
+        var result = await Mediator.Send(filtros);
 
         return ApiResult(result);
     }
@@ -43,7 +43,7 @@ public class TipoCervejaController : ApiBaseController<TipoCervejaController>
     [HttpPost]
     public async Task<IActionResult> CriarTipoCervejaAsync([FromBody] CriarTipoCervejaCommand novoTipoCerveja)
     {
-        Logger.LogInformation("Criar Tipos de Cerveja cadastrados");
+        Logger.LogInformation("Criar novo Tipo de Cerveja");
 
         var result = await Mediator.Send(novoTipoCerveja);
 

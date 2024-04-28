@@ -12,7 +12,7 @@ public sealed record ObterCervejaPorIdResponse(string Nome, string Fabricante, b
             Artesanal: cerveja.Artesanal,
             Descricao: cerveja.Descricao,
             AnoLancamento: cerveja.AnoLancamento,
-            TipoId: cerveja.TipoId,
-            Tipo: cerveja.Tipo
+            TipoId: cerveja.TipoCervejaId,
+            Tipo: cerveja.TipoCerveja
         );
 }

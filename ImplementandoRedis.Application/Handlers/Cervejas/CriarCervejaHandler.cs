@@ -9,7 +9,7 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
     private readonly ITipoCervejaRepository _tipoCervejaRepo;
 
     public CriarCervejaHandler([FromKeyedServices(KeyedServicesName.CERVEJA_REDIS_REPO)] ICervejaRepository repository,
-        [FromKeyedServices(KeyedServicesName.TIPO_CERVEJA_EF_REPO)] ITipoCervejaRepository tipoCervejaRepo)
+        [FromKeyedServices(KeyedServicesName.TIPO_CERVEJA_REDIS_REPO)] ITipoCervejaRepository tipoCervejaRepo)
     {
         _cervejaRepo = repository;
         _tipoCervejaRepo = tipoCervejaRepo;
@@ -19,12 +19,12 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
     {
         var response = new CustomResult<CriarCervejaResponse>();
 
-        var tipoCerveja = await _tipoCervejaRepo.ObterPorIdNoTrackAsync(request.Tipo);
+        var tipoCerveja = await _tipoCervejaRepo.ObterPorIdAsync(request.TipoCervejaId);
 
         if (tipoCerveja is null)
             return response.BadRequestResponse("Tipo de cerveja informado não é válido");
 
-        var cerveja = new Cerveja(
+        var cerveja = Cerveja.Create(
             request.Nome,
             request.Fabricante,
             request.Artesanal,

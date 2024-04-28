@@ -2,4 +2,4 @@
 
 namespace ImplementandoRedis.Application.Queries.TiposCerveja;
 
-public sealed record ObterTodosTiposCervejaQuery() : IRequest<CustomResult<IEnumerable<TipoCervejaResponse>>>;
+public sealed record ObterTodosTiposCervejaQuery() : IRequest<CustomResult<IEnumerable<ObterTodosTiposCervejaResponse>>>;

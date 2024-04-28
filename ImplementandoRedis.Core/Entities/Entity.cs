@@ -1,13 +1,12 @@
 ﻿using ImplementandoRedis.Core.Events;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace ImplementandoRedis.Core.Entities;
 
 public abstract class Entity
 {
-    protected List<DomainEvent> _domainEvents = new();
-    protected List<string> _errors = new();
+    protected static List<DomainEvent> _domainEvents = new();
+    protected static List<string> _errors = new();
 
 
     public DateTime? DataAtualizacao { get; set; }
@@ -27,6 +26,6 @@ public abstract class Entity
     public bool IsValid { get => (_errors.Any() is false); }
 
 
-    protected void Raise(DomainEvent domainEvent) =>
+    protected static void Raise(DomainEvent domainEvent) =>
         _domainEvents.Add(domainEvent);
 }

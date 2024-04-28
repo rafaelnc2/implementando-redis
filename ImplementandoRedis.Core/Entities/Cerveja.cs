@@ -1,6 +1,4 @@
 ﻿using ImplementandoRedis.Application.Events.Cervejas;
-using Redis.OM.Modeling;
-using System.Text.Json.Serialization;
 
 namespace ImplementandoRedis.Core.Entities;
 
@@ -13,13 +11,8 @@ public sealed class Cerveja : Entity
     }
 
     [JsonConstructor]
-    public Cerveja(string nome, string fabricante, bool artesanal, string descricao, int anoLancamento, int tipoId, TipoCerveja? tipo = null)
+    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, int anoLancamento, int tipoCervejaId, TipoCerveja tipoCerveja)
     {
-        Validate(nome, fabricante);
-
-        if (IsValid is false)
-            return;
-
         Id = Guid.NewGuid();
 
         Nome = nome;
@@ -28,12 +21,32 @@ public sealed class Cerveja : Entity
         Descricao = descricao;
         AnoLancamento = anoLancamento;
 
-        TipoId = tipoId;
-        Tipo = tipo;
+        TipoCervejaId = tipoCervejaId;
+        TipoCerveja = tipoCerveja;
 
         DataCriacao = DateTime.Now;
+    }
 
-        Raise(new CervejaCriadaEvent(Guid.NewGuid(), this));
+    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, int anoLancamento, int tipoCervejaId, TipoCerveja tipoCerveja)
+    {
+        Validate(nome, fabricante);
+
+        if (_errors.Any() is false)
+            return null;
+
+        var cerveja = new Cerveja(
+            nome,
+            fabricante,
+            artesanal,
+            descricao,
+            anoLancamento,
+            tipoCervejaId,
+            tipoCerveja
+        );
+
+        Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja));
+
+        return cerveja;
     }
 
 
@@ -50,7 +63,7 @@ public sealed class Cerveja : Entity
     [Indexed]
     public bool Artesanal { get; private set; }
 
-    public int TipoId { get; private set; }
+    public int TipoCervejaId { get; private set; }
 
     [Searchable]
     public string Descricao { get; private set; } = string.Empty;
@@ -60,10 +73,10 @@ public sealed class Cerveja : Entity
 
 
     [Indexed]
-    public TipoCerveja? Tipo { get; private set; }
+    public TipoCerveja? TipoCerveja { get; private set; }
 
 
-    private void Validate(string nome, string fabricante)
+    private static void Validate(string nome, string fabricante)
     {
         if (string.IsNullOrWhiteSpace(nome))
             _errors.Add("Nome é obrigatório");

@@ -11,7 +11,7 @@ public sealed class Cerveja : Entity
     }
 
     [JsonConstructor]
-    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, int anoLancamento, int tipoCervejaId, TipoCerveja tipoCerveja)
+    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, string armonizacao, int anoLancamento, TipoCerveja tipoCerveja)
     {
         Id = Guid.NewGuid();
 
@@ -19,17 +19,18 @@ public sealed class Cerveja : Entity
         Fabricante = fabricante;
         Artesanal = artesanal;
         Descricao = descricao;
+        Armonizacao = armonizacao;
         AnoLancamento = anoLancamento;
 
-        TipoCervejaId = tipoCervejaId;
+        TipoCervejaId = tipoCerveja.Id;
         TipoCerveja = tipoCerveja;
 
         DataCriacao = DateTime.Now;
     }
 
-    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, int anoLancamento, int tipoCervejaId, TipoCerveja tipoCerveja)
+    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, string armonizacao, int anoLancamento, TipoCerveja tipoCerveja)
     {
-        Validate(nome, fabricante);
+        Validate(nome, fabricante, descricao, armonizacao);
 
         if (_errors.Any() is false)
             return null;
@@ -39,8 +40,8 @@ public sealed class Cerveja : Entity
             fabricante,
             artesanal,
             descricao,
+            armonizacao,
             anoLancamento,
-            tipoCervejaId,
             tipoCerveja
         );
 
@@ -68,6 +69,9 @@ public sealed class Cerveja : Entity
     [Searchable]
     public string Descricao { get; private set; } = string.Empty;
 
+    [Searchable]
+    public string Armonizacao { get; private set; } = string.Empty;
+
     [Indexed]
     public int AnoLancamento { get; private set; }
 
@@ -76,7 +80,7 @@ public sealed class Cerveja : Entity
     public TipoCerveja? TipoCerveja { get; private set; }
 
 
-    private static void Validate(string nome, string fabricante)
+    private static void Validate(string nome, string fabricante, string descricao, string armonizacao)
     {
         if (string.IsNullOrWhiteSpace(nome))
             _errors.Add("Nome é obrigatório");
@@ -89,5 +93,11 @@ public sealed class Cerveja : Entity
 
         if (fabricante is not null && fabricante.Length > 100)
             _errors.Add("Fabricante deve ter no máximo 100 caracteres");
+
+        if (descricao is not null && descricao.Length > 1000)
+            _errors.Add("Descrição deve ter no máximo 1000 caracteres");
+
+        if (armonizacao is not null && armonizacao.Length > 1000)
+            _errors.Add("Armonizacao deve ter no máximo 1000 caracteres");
     }
 }

@@ -1,12 +1,4 @@
-﻿using ImplementandoRedis.Core.Entities;
-using ImplementandoRedis.Core.Repositories;
-using MediatR;
-using Redis.OM;
-using Redis.OM.Searching;
-using StackExchange.Redis;
-using System.Linq.Expressions;
-
-namespace ImplementandoRedis.Infra.Repositories.Redis;
+﻿namespace ImplementandoRedis.Infra.Repositories.Redis;
 
 public class CervejaRedisRepository : ICervejaRepository
 {

@@ -29,8 +29,8 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
             request.Fabricante,
             request.Artesanal,
             request.Descricao,
+            request.Armonizacao,
             request.AnoLancamento,
-            tipoCerveja.Id,
             tipoCerveja
         );
 

@@ -2,5 +2,5 @@
 
 namespace ImplementandoRedis.Application.Commands.Cervejas;
 
-public sealed record CriarCervejaCommand(string Nome, string Fabricante, bool Artesanal, int TipoCervejaId, string Descricao, int AnoLancamento)
+public sealed record CriarCervejaCommand(string Nome, string Fabricante, bool Artesanal, int TipoCervejaId, string Descricao, string Armonizacao, int AnoLancamento)
     : IRequest<CustomResult<CriarCervejaResponse>>;

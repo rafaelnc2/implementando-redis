@@ -29,7 +29,7 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
             request.Fabricante,
             request.Artesanal,
             request.Descricao,
-            request.Armonizacao,
+            request.Harmonizacao,
             request.AnoLancamento,
             tipoCerveja
         );

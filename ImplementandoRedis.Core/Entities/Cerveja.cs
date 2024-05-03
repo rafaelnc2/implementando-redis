@@ -1,4 +1,5 @@
 ﻿using ImplementandoRedis.Application.Events.Cervejas;
+using ImplementandoRedis.Core.Events.Cervejas;
 
 namespace ImplementandoRedis.Core.Entities;
 
@@ -11,7 +12,7 @@ public sealed class Cerveja : Entity
     }
 
     [JsonConstructor]
-    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, string armonizacao, int anoLancamento, TipoCerveja tipoCerveja)
+    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
     {
         Id = Guid.NewGuid();
 
@@ -19,7 +20,7 @@ public sealed class Cerveja : Entity
         Fabricante = fabricante;
         Artesanal = artesanal;
         Descricao = descricao;
-        Armonizacao = armonizacao;
+        Harmonizacao = harmonizacao;
         AnoLancamento = anoLancamento;
 
         TipoCervejaId = tipoCerveja.Id;
@@ -28,11 +29,11 @@ public sealed class Cerveja : Entity
         DataCriacao = DateTime.Now;
     }
 
-    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, string armonizacao, int anoLancamento, TipoCerveja tipoCerveja)
+    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
     {
-        Validate(nome, fabricante, descricao, armonizacao);
+        Validate(nome, fabricante, descricao, harmonizacao);
 
-        if (_errors.Any() is false)
+        if (_errors.Any() is true)
             return null;
 
         var cerveja = new Cerveja(
@@ -40,12 +41,12 @@ public sealed class Cerveja : Entity
             fabricante,
             artesanal,
             descricao,
-            armonizacao,
+            harmonizacao,
             anoLancamento,
             tipoCerveja
         );
 
-        Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja));
+        Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja.Id));
 
         return cerveja;
     }
@@ -70,17 +71,17 @@ public sealed class Cerveja : Entity
     public string Descricao { get; private set; } = string.Empty;
 
     [Searchable]
-    public string Armonizacao { get; private set; } = string.Empty;
+    public string Harmonizacao { get; private set; } = string.Empty;
 
     [Indexed]
     public int AnoLancamento { get; private set; }
 
 
     [Indexed]
-    public TipoCerveja? TipoCerveja { get; private set; }
+    public TipoCerveja TipoCerveja { get; private set; }
 
 
-    private static void Validate(string nome, string fabricante, string descricao, string armonizacao)
+    private static void Validate(string nome, string fabricante, string descricao, string harmonizacao)
     {
         if (string.IsNullOrWhiteSpace(nome))
             _errors.Add("Nome é obrigatório");
@@ -97,7 +98,29 @@ public sealed class Cerveja : Entity
         if (descricao is not null && descricao.Length > 1000)
             _errors.Add("Descrição deve ter no máximo 1000 caracteres");
 
-        if (armonizacao is not null && armonizacao.Length > 1000)
+        if (harmonizacao is not null && harmonizacao.Length > 1000)
             _errors.Add("Armonizacao deve ter no máximo 1000 caracteres");
+    }
+
+    public void Update(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
+    {
+        Validate(nome, fabricante, descricao, harmonizacao);
+
+        if (_errors.Any() is true)
+            return;
+
+        Nome = nome;
+        Fabricante = fabricante;
+        Artesanal = artesanal;
+        Descricao = descricao;
+        Harmonizacao = harmonizacao;
+        AnoLancamento = anoLancamento;
+
+        TipoCervejaId = tipoCerveja.Id;
+        TipoCerveja = tipoCerveja;
+
+        DataAtualizacao = DateTime.Now;
+
+        Raise(new CervejaAtualizadaEvent(Guid.NewGuid(), Id));
     }
 }

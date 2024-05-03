@@ -24,9 +24,13 @@ public class CervejaRedisRepository : ICervejaRepository
     }
 
 
-    public Task<Cerveja> AtualizarAsync(Cerveja cerveja)
+    public async Task<Cerveja> AtualizarAsync(Cerveja cerveja)
     {
-        throw new NotImplementedException();
+        await _cerveja.UpdateAsync(cerveja);
+
+        await RaiseEventsAsync(cerveja);
+
+        return cerveja;
     }
 
     public Task<IEnumerable<Cerveja>> GetAsync()
@@ -59,5 +63,7 @@ public class CervejaRedisRepository : ICervejaRepository
         {
             await _eventPublisher.Publish(domainEvent, CancellationToken.None);
         }
+
+        cerveja.ClearEvents();
     }
 }

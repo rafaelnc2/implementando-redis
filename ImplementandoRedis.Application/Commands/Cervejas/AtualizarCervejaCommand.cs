@@ -2,7 +2,7 @@
 
 namespace ImplementandoRedis.Application.Commands.Cervejas;
 
-public sealed record AtualizarCervejaCommand(string Nome, string Fabricante, bool Artesanal, int Tipo, string Descricao, int AnoLancamento)
+public sealed record AtualizarCervejaCommand(string Nome, string Fabricante, bool Artesanal, int TipoCervejaId, string Descricao, string Harmonizacao, int AnoLancamento)
     : IRequest<CustomResult<CriarCervejaResponse>>
 {
     public string Id { get; set; } = null!;

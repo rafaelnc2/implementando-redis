@@ -28,4 +28,6 @@ public abstract class Entity
 
     protected static void Raise(DomainEvent domainEvent) =>
         _domainEvents.Add(domainEvent);
+
+    public void ClearEvents() => _domainEvents.Clear();
 }

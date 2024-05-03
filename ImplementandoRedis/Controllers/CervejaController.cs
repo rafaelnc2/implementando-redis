@@ -29,17 +29,17 @@ public class CervejaController : ApiBaseController<CervejaController>
         return ApiResult(result);
     }
 
-    //[HttpPut("{id}")]
-    //public async Task<IActionResult> AtualizarAsync([FromRoute] string id, [FromBody] AtualizarCervejaCommand atualizaCommand)
-    //{
-    //    Logger.LogInformation($"Update student with ID = {id}");
+    [HttpPut("{id}")]
+    public async Task<IActionResult> AtualizarAsync([FromRoute] string id, [FromBody] AtualizarCervejaCommand atualizaCommand)
+    {
+        Logger.LogInformation($"Atualizar cerveja ID = {id}");
 
-    //    atualizaCommand.SetCervejaId(id);
+        atualizaCommand.SetCervejaId(id);
 
-    //    var result = await Mediator.Send(atualizaCommand);
+        var result = await Mediator.Send(atualizaCommand);
 
-    //    return ApiResult(result);
-    //}
+        return ApiResult(result);
+    }
 
     //[HttpGet]
     //public async Task<IActionResult> GetAll([FromQuery] GetAllStudentsQuery query, CancellationToken cancellationToken)

@@ -16,9 +16,4 @@
     <ProjectReference Include="..\ImplementandoRedis.Shared\ImplementandoRedis.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
 </Project>

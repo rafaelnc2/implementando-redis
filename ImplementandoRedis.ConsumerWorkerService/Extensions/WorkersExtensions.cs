@@ -8,6 +8,7 @@ public static class WorkersExtensions
     public static void AddWorkers(this IServiceCollection services)
     {
         services.AddHostedService<CriarCervejaWorker>();
+        services.AddHostedService<AtualizarCervejaWorker>();
         services.AddHostedService<CriarTipoCervejaWorker>();
         services.AddHostedService<AtualizarTipoCervejaWorker>();
     }

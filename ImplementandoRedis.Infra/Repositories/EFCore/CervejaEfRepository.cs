@@ -1,8 +1,5 @@
 ﻿using CacheSample.Infra.DataAccess.EFCore.Context;
-using ImplementandoRedis.Core.Entities;
-using ImplementandoRedis.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ImplementandoRedis.Infra.Repositories.EFCore;
 
@@ -15,9 +12,16 @@ public class CervejaEfRepository : ICervejaRepository
         _ctx = ctx;
     }
 
-    public Task<Cerveja> AtualizarAsync(Cerveja cerveja)
+    public async Task<Cerveja> AtualizarAsync(Cerveja cerveja)
     {
-        throw new NotImplementedException();
+        _ctx.Set<Cerveja>().Update(cerveja);
+
+        //Ignora a propriedade Tipo na hora de incluir / evita o ef querer incluir um novo tipo
+        _ctx.Entry(cerveja.TipoCerveja).State = EntityState.Unchanged;
+
+        await _ctx.SaveChangesAsync();
+
+        return cerveja;
     }
 
     public async Task<Cerveja> CriarAsync(Cerveja cerveja)

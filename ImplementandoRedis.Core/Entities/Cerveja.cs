@@ -25,32 +25,7 @@ public sealed class Cerveja : Entity
 
         TipoCervejaId = tipoCerveja.Id;
         TipoCerveja = tipoCerveja;
-
-        DataCriacao = DateTime.Now;
     }
-
-    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
-    {
-        Validate(nome, fabricante, descricao, harmonizacao);
-
-        if (_errors.Any() is true)
-            return null;
-
-        var cerveja = new Cerveja(
-            nome,
-            fabricante,
-            artesanal,
-            descricao,
-            harmonizacao,
-            anoLancamento,
-            tipoCerveja
-        );
-
-        Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja.Id));
-
-        return cerveja;
-    }
-
 
     [RedisIdField]
     [Indexed]
@@ -81,25 +56,29 @@ public sealed class Cerveja : Entity
     public TipoCerveja TipoCerveja { get; private set; }
 
 
-    private static void Validate(string nome, string fabricante, string descricao, string harmonizacao)
+
+    public static Cerveja? Create(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
     {
-        if (string.IsNullOrWhiteSpace(nome))
-            _errors.Add("Nome é obrigatório");
+        Validate(nome, fabricante, descricao, harmonizacao);
 
-        if (nome is not null && nome.Length > 50)
-            _errors.Add("Nome deve ter no máximo 50 caracteres");
+        if (_errors.Any() is true)
+            return null;
 
-        if (string.IsNullOrWhiteSpace(fabricante))
-            _errors.Add("Fabricante é obrigatório");
+        var cerveja = new Cerveja(
+            nome,
+            fabricante,
+            artesanal,
+            descricao,
+            harmonizacao,
+            anoLancamento,
+            tipoCerveja
+        );
 
-        if (fabricante is not null && fabricante.Length > 100)
-            _errors.Add("Fabricante deve ter no máximo 100 caracteres");
+        cerveja.DataCriacao = DateTime.Now;
 
-        if (descricao is not null && descricao.Length > 1000)
-            _errors.Add("Descrição deve ter no máximo 1000 caracteres");
+        Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja.Id));
 
-        if (harmonizacao is not null && harmonizacao.Length > 1000)
-            _errors.Add("Armonizacao deve ter no máximo 1000 caracteres");
+        return cerveja;
     }
 
     public void Update(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
@@ -123,4 +102,26 @@ public sealed class Cerveja : Entity
 
         Raise(new CervejaAtualizadaEvent(Guid.NewGuid(), Id));
     }
+
+    private static void Validate(string nome, string fabricante, string descricao, string harmonizacao)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            _errors.Add("Nome é obrigatório");
+
+        if (nome is not null && nome.Length > 50)
+            _errors.Add("Nome deve ter no máximo 50 caracteres");
+
+        if (string.IsNullOrWhiteSpace(fabricante))
+            _errors.Add("Fabricante é obrigatório");
+
+        if (fabricante is not null && fabricante.Length > 100)
+            _errors.Add("Fabricante deve ter no máximo 100 caracteres");
+
+        if (descricao is not null && descricao.Length > 1000)
+            _errors.Add("Descrição deve ter no máximo 1000 caracteres");
+
+        if (harmonizacao is not null && harmonizacao.Length > 1000)
+            _errors.Add("Armonizacao deve ter no máximo 1000 caracteres");
+    }
+
 }

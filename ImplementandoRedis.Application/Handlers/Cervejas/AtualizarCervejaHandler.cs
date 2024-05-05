@@ -28,9 +28,9 @@ public class AtualizarCervejaHandler : IRequestHandler<AtualizarCervejaCommand, 
         if (cerveja is null)
             response.NotFoundResponse();
 
-        var tipoCerveja = cerveja.TipoCerveja;
+        var tipoCerveja = cerveja?.TipoCerveja;
 
-        if (request.TipoCervejaId != cerveja.TipoCervejaId)
+        if (request.TipoCervejaId != cerveja?.TipoCervejaId)
         {
             tipoCerveja = await _tipoCervejaRepo.ObterPorIdAsync(request.TipoCervejaId);
 
@@ -38,7 +38,7 @@ public class AtualizarCervejaHandler : IRequestHandler<AtualizarCervejaCommand, 
                 return response.BadRequestResponse("Tipo de cerveja informado não é válido");
         }
 
-        cerveja.Update(
+        cerveja?.Update(
             request.Nome,
             request.Fabricante,
             request.Artesanal,
@@ -48,7 +48,7 @@ public class AtualizarCervejaHandler : IRequestHandler<AtualizarCervejaCommand, 
             tipoCerveja
         );
 
-        if (cerveja.IsValid is false)
+        if (cerveja?.IsValid is false)
             response.BadRequestResponse(cerveja.Errors);
 
         await _cervejaRepo.AtualizarAsync(cerveja);

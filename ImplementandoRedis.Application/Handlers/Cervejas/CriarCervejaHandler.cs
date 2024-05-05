@@ -34,7 +34,7 @@ public class CriarCervejaHandler : IRequestHandler<CriarCervejaCommand, CustomRe
             tipoCerveja
         );
 
-        if (cerveja.IsValid is false)
+        if (cerveja?.IsValid is false)
             response.BadRequestResponse(cerveja.Errors);
 
         await _cervejaRepo.CriarAsync(cerveja);

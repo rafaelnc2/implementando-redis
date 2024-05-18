@@ -12,7 +12,7 @@ public sealed class Cerveja : Entity
     }
 
     [JsonConstructor]
-    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja)
+    private Cerveja(string nome, string fabricante, bool artesanal, string descricao, string harmonizacao, int anoLancamento, TipoCerveja tipoCerveja, DateTime dataCriacao, DateTime? dataAtualizacao)
     {
         Id = Guid.NewGuid();
 
@@ -25,6 +25,9 @@ public sealed class Cerveja : Entity
 
         TipoCervejaId = tipoCerveja.Id;
         TipoCerveja = tipoCerveja;
+
+        DataCriacao = dataCriacao;
+        DataAtualizacao = dataAtualizacao.HasValue ? dataAtualizacao.Value : null;
     }
 
     [RedisIdField]
@@ -71,10 +74,10 @@ public sealed class Cerveja : Entity
             descricao,
             harmonizacao,
             anoLancamento,
-            tipoCerveja
+            tipoCerveja,
+            dataCriacao: DateTime.Now,
+            null
         );
-
-        cerveja.DataCriacao = DateTime.Now;
 
         Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja.Id));
 

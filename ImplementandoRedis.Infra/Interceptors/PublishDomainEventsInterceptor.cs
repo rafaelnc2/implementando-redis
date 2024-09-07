@@ -18,6 +18,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
         {
             await PublishEventsAsync(eventData.Context, cancellationToken);
         }
+
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 

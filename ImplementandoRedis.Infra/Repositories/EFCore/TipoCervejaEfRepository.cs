@@ -1,8 +1,6 @@
 ﻿using CacheSample.Infra.DataAccess.EFCore.Context;
-using ImplementandoRedis.Core.Entities;
-using ImplementandoRedis.Core.Repositories;
+using ImplementandoRedis.Core.Filters;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ImplementandoRedis.Infra.Repositories.EFCore;
 
@@ -53,6 +51,11 @@ public class TipoCervejaEfRepository : ITipoCervejaRepository
     //}
 
     public Task<IEnumerable<TipoCerveja>> ObterPorFiltroAsync(Expression<Func<TipoCerveja, bool>> filter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<TipoCerveja>> ObterPorFiltroAsync(ObterTipoCervejaFilters filters)
     {
         throw new NotImplementedException();
     }

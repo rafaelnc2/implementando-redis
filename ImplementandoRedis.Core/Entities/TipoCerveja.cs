@@ -11,7 +11,7 @@ public sealed class TipoCerveja : Entity
     }
 
     [JsonConstructor]
-    private TipoCerveja(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao)
+    private TipoCerveja(string nome, string origem, string coloracao, string teorAlcoolico, string fermentacao, string descricao, DateTime dataCriacao, DateTime? dataAtualizacao)
     {
         Id = Id;
         Nome = nome.Trim();
@@ -22,6 +22,7 @@ public sealed class TipoCerveja : Entity
         Descricao = descricao;
 
         DataCriacao = DateTime.Now;
+        DataAtualizacao = dataAtualizacao.HasValue ? dataAtualizacao.Value : null;
     }
 
     [JsonInclude]
@@ -29,7 +30,7 @@ public sealed class TipoCerveja : Entity
     [Indexed]
     public int Id { get; private set; }
 
-    [Indexed]
+    [Searchable]
     public string Nome { get; private set; } = string.Empty;
 
     [Indexed]
@@ -93,7 +94,9 @@ public sealed class TipoCerveja : Entity
             coloracao,
             teorAlcoolico,
             fermentacao,
-            descricao
+            descricao,
+            dataCriacao: DateTime.Now,
+            dataAtualizacao: null
         );
 
         Raise(new TipoCervejaAtualizadoEvent(Guid.NewGuid(), tipoCerveja));

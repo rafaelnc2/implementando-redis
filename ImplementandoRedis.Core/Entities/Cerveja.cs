@@ -34,7 +34,7 @@ public sealed class Cerveja : Entity
     [Indexed]
     public Guid Id { get; set; }
 
-    [Indexed]
+    [Searchable]
     public string Nome { get; private set; } = string.Empty;
 
     [Indexed]
@@ -76,7 +76,7 @@ public sealed class Cerveja : Entity
             anoLancamento,
             tipoCerveja,
             dataCriacao: DateTime.Now,
-            null
+            dataAtualizacao: null
         );
 
         Raise(new CervejaCriadaEvent(Guid.NewGuid(), cerveja.Id));

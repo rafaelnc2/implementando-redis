@@ -1,7 +1,6 @@
 ﻿using ImplementandoRedis.Application.Queries.TiposCerveja;
+using ImplementandoRedis.Core.Filters;
 using ImplementandoRedis.Shared.Responses.TiposCerveja;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace ImplementandoRedis.Application.Handlers.TiposCerveja;
 
@@ -18,12 +17,14 @@ public class ObterTipoCervejaPorFiltrosHandler : IRequestHandler<ObterTipoCervej
     {
         var response = new CustomResult<IEnumerable<TipoCervejaResponse>>();
 
-        Expression<Func<TipoCerveja, bool>> filter = tipo => tipo.Nome.Contains(request.Nome);
+        //Expression<Func<TipoCerveja, bool>> filter = tipo => tipo.Nome.Contains(request.Nome);
 
         //https://code-maze.com/dynamic-queries-expression-trees-csharp/
         //var teste = CreateFilterExpression("nome", request.Nome);
 
-        var tiposCerveja = await _tipoCervejaRepo.ObterPorFiltroAsync(filter);
+        var filters = new ObterTipoCervejaFilters(request.Nome, request.Origem, request.Coloracao, request.TeorAlcoolico, request.Fermentacao);
+
+        var tiposCerveja = await _tipoCervejaRepo.ObterPorFiltroAsync(filters);
 
         if (tiposCerveja is null)
             return response.OkResponse(Enumerable.Empty<TipoCervejaResponse>());
@@ -34,19 +35,19 @@ public class ObterTipoCervejaPorFiltrosHandler : IRequestHandler<ObterTipoCervej
     }
 
 
-    private Expression<Func<TipoCerveja, bool>> CreateFilterExpression(string propertyName, string propertyValue)
-    {
-        //verificar melhor forma de fazer o filtro
-        var parameterExp = Expression.Parameter(typeof(TipoCerveja), "type");
+    //private Expression<Func<TipoCerveja, bool>> CreateFilterExpression(string propertyName, string propertyValue)
+    //{
+    //    //verificar melhor forma de fazer o filtro
+    //    var parameterExp = Expression.Parameter(typeof(TipoCerveja), "type");
 
-        var propertyExp = Expression.Property(parameterExp, propertyName);
+    //    var propertyExp = Expression.Property(parameterExp, propertyName);
 
-        MethodInfo method = typeof(string).GetMethod("Contains", [typeof(string)]);
+    //    MethodInfo method = typeof(string).GetMethod("Contains", [typeof(string)]);
 
-        var someValue = Expression.Constant(propertyValue, typeof(string));
+    //    var someValue = Expression.Constant(propertyValue, typeof(string));
 
-        var containsMethodExp = Expression.Call(propertyExp, method, someValue);
+    //    var containsMethodExp = Expression.Call(propertyExp, method, someValue);
 
-        return Expression.Lambda<Func<TipoCerveja, bool>>(containsMethodExp, parameterExp);
-    }
+    //    return Expression.Lambda<Func<TipoCerveja, bool>>(containsMethodExp, parameterExp);
+    //}
 }

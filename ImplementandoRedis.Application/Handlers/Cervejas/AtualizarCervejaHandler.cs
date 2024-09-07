@@ -28,7 +28,7 @@ public class AtualizarCervejaHandler : IRequestHandler<AtualizarCervejaCommand, 
         if (cerveja is null)
             response.NotFoundResponse();
 
-        var tipoCerveja = cerveja?.TipoCerveja;
+        var tipoCerveja = cerveja.TipoCerveja;
 
         if (request.TipoCervejaId != cerveja?.TipoCervejaId)
         {

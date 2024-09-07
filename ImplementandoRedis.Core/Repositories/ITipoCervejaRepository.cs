@@ -1,7 +1,9 @@
 ﻿using ImplementandoRedis.Core.Entities;
+using ImplementandoRedis.Core.Filters;
 using System.Linq.Expressions;
 
 namespace ImplementandoRedis.Core.Repositories;
+
 public interface ITipoCervejaRepository
 {
     public Task<TipoCerveja> CriarAsync(TipoCerveja tipoCerveja);
@@ -13,4 +15,5 @@ public interface ITipoCervejaRepository
     Task<TipoCerveja?> ObterPorIdNoTrackAsync(int tipoCervejaId);
     Task<IEnumerable<TipoCerveja>> ObterTodosAsync();
     Task<IEnumerable<TipoCerveja>> ObterPorFiltroAsync(Expression<Func<TipoCerveja, bool>> filter);
+    Task<IEnumerable<TipoCerveja>> ObterPorFiltroAsync(ObterTipoCervejaFilters filters);
 }
